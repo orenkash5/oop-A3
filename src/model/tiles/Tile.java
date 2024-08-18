@@ -33,5 +33,7 @@ public abstract class Tile {
         return position;
     }
 
-
+    public char getTile() {
+        return tile;
+    }
 }

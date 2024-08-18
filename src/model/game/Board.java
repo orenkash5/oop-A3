@@ -34,11 +34,13 @@ public class Board {
     public String toString() {
 
         StringBuilder sb = new StringBuilder();
+        int counter = 0;
         for(Map.Entry<Position, Tile> entry : board.entrySet()){
-            sb.append(entry.getValue().toString());
-            if(entry.getKey().getX() == width-1){
+            if(entry.getKey().getY() > counter){
                 sb.append("\n");
+                counter++;
             }
+            sb.append(entry.getValue().toString());
         }
         return sb.toString();
     }

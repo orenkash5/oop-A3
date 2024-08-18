@@ -27,11 +27,12 @@ public class Rogue extends Player {
     }
 
     public void specialAbility(List<Enemy> enemies){
-        if (this.currentEnergy - this.cost >= 0){
+        if (this.currentEnergy - this.cost >= 0) {
             this.currentEnergy = this.currentEnergy - this.cost;
-            // continue function
+            for (Enemy enemy : enemies) {
+                enemy.takeDamage(this.attack);
+            }
         }
-
     }
     public String description(){
         return name + " health " + health.toString() + " attack " + attack + " defence " + defense + " cost " + cost + " current energy " + currentEnergy;

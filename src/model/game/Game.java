@@ -47,24 +47,18 @@ public class Game {
             List<Tile> enemies = new ArrayList<>();
             String tilesStr = readFileToString(levels[k]);
             int width = getLineLength(tilesStr);
-            List<Character> clst = convertStringToCharacterList(tilesStr);
             List<Tile> tiles = new ArrayList<>();
-            List<Character> boardlst = new ArrayList<>();
-            for (char c : clst) {
-                if (c != '\n') {
-                    boardlst.add(c);
-                }
-            }
             int counter = 0;
-            for(int i = 0;i<clst.size();i++) {
-                if (isTile(clst.get(i))) {
-                    Tile t = makeTile(clst.get(i));
-                    if (isEnemyCharacter(clst.get(i))) {
+            for(int i = 0;i<tilesStr.length();i++) {
+                if (isTile(tilesStr.charAt(i))) {
+                    Tile t = makeTile(tilesStr.charAt(i));
+                    if (isEnemyCharacter(tilesStr.charAt(i))) {
                         enemies.add(t);
                     }
-                    t = t.initialize(new Position((i+counter) % width, (i+counter) / width));
+                    t.initialize(new Position((i-(counter/2)) % width, (i) / (width+(counter/2))));
                     tiles.add(t);
-                }
+                }else
+                    counter++;
             }
             board=new Board(tiles, p, enemies, width);
             System.out.println("Level: "+(k+1));
@@ -77,11 +71,12 @@ public class Game {
                 }
                 playerMove(c, enemies);
 
+
                 if (p.getHealth().getCurrent() <= 0){
                     p.onDeath();
                     endGame = true;
                 }
-                
+
             }
             if (!endGame)
                 System.out.println("The Level is Finished!");
@@ -120,14 +115,6 @@ public class Game {
 
     }
 
-    public static List<Character> convertStringToCharacterList(String str) {
-        char[] charArray = str.toCharArray();
-        List<Character> charList = new ArrayList<>();
-        for (char c : charArray) {
-            charList.add(c);
-        }
-        return charList;
-    }
     public Tile makeTile(char c){
         switch (c){
             case 's':
@@ -186,7 +173,7 @@ public class Game {
                 Tile t4 = board.getBoard().get(pos4);
                 p.interact(t4);
             case('e'):
-                //sdf
+                //continue
         }
     }
     public void enemyMove(int i, Enemy e){
