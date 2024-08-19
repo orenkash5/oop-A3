@@ -10,6 +10,8 @@ import utils.Position;
 import utils.callbacks.DeathCallback;
 import utils.callbacks.MessageCallback;
 import utils.generators.Generator;
+import utils.generators.RandomGenerator;
+import view.CLI;
 
 public abstract class Unit extends Tile {
     protected String name;
@@ -27,6 +29,7 @@ public abstract class Unit extends Tile {
         this.health = new Health(hitPoints);
         this.attack = attack;
         this.defense = defense;
+        generator = new RandomGenerator();
     }
 
     public Unit initialize(Position p, Generator generator, DeathCallback deathCallback, MessageCallback messageCallback){
@@ -53,6 +56,8 @@ public abstract class Unit extends Tile {
         int attack = this.attack();
         int defense = enemy.defend();
         int damageTaken = enemy.health.takeDamage(attack - defense);
+        CLI cli = new CLI();
+        cli.displayCombatInfo(this, enemy, attack, defense, damageTaken);
     }
 
     public void interact(Tile t){
@@ -78,6 +83,9 @@ public abstract class Unit extends Tile {
     }
     public String description(){
         return name + " health " + health.toString() + " attack " + attack + " defence " + defense;
+    }
+    public Health getHealth(){
+        return this.health;
     }
 
 

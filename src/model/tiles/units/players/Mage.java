@@ -1,8 +1,11 @@
 package model.tiles.units.players;
 
 import model.tiles.units.enemies.Enemy;
+import view.CLI;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Mage extends Player{
     protected int manaPool;
@@ -29,22 +32,35 @@ public class Mage extends Player{
         this.manaPool = manaPool + 25*this.level;
         this.currentMana = Math.min(this.currentMana + this.manaPool/4, this.manaPool);
         this.spellPower = this.spellPower + 10*this.level;
+        CLI cli = new CLI();
+        cli.displayLevelUp(this);
     }
 
     public void gameTick() {
         this.currentMana=Math.min(this.manaPool, this.currentMana + this.level);
     }
     public void specialAbility(List<Enemy> enemies) {
-
-        if (this.currentMana-this.manaCost >= 0){
-            this.currentMana = this.currentMana-this.manaCost;
+        if (this.currentMana - this.manaCost >= 0) {
+            this.currentMana = this.currentMana - this.manaCost;
             int hits = 0;
-            // continue function
+            List<Enemy> enemiesInRange = new ArrayList<>();
+            for (Enemy enemy : enemies) {
+                if (enemy.getPosition().range(this.getPosition()) < 3) {
+                    enemiesInRange.add(enemy);
+                }
+            }
+            while (hits < hitCount) {
+                Random random = new Random();
+                int randomIndex = random.nextInt(enemiesInRange.size());
+                Enemy chosenEnemy = enemiesInRange.get(randomIndex);
+                chosenEnemy.getHealth().takeDamage(this.spellPower);
+                hits++;
+            }
         }
     }
     public String description(){
         return name + " health " + health.toString() + " attack " + attack + " defence " + defense + " mana pool " + manaPool
                 + " current mana " + currentMana + " mana cost " + manaCost + " spell power " + spellPower + " hit count "
-                + hitCount + " ability range " + abilityRange;
+                + hitCount + " ability range " + abilityRange  + " level " + this.level;
     }
 }

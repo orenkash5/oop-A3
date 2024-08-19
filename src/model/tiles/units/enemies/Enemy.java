@@ -2,10 +2,11 @@ package model.tiles.units.enemies;
 
 import model.tiles.units.Unit;
 import model.tiles.units.players.Player;
+import utils.Position;
 
 public class Enemy extends Unit {
     protected int experienceValue;
-    private boolean playerInRange = false;
+
 
     public Enemy(char tile, String name, int hitPoints, int attack, int defense, int experienceValue) {
         super(tile, name, hitPoints, attack, defense);
@@ -32,10 +33,11 @@ public class Enemy extends Unit {
         }
     }
 
-    public boolean isPlayerInRange() {
-        return playerInRange;
+    public boolean isPlayerInRange(Position position) {
+        return false;
     }
-    public void setPlayerInRange(){
-        this.playerInRange = true;
+
+    public void move(Position playerPosition){
+        //do nothing
     }
 }

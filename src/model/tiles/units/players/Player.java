@@ -1,9 +1,11 @@
 package model.tiles.units.players;
 
+import model.tiles.Tile;
 import model.tiles.units.Unit;
 import model.tiles.units.enemies.Enemy;
 import utils.Health;
 import utils.Position;
+import view.CLI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +43,8 @@ public class Player extends Unit {
         health.heal();
         attack += attackGain;
         defense += defenseGain;
+        CLI cli = new CLI();
+        cli.displayLevelUp(this);
     }
 
     protected int levelRequirement(){
@@ -71,6 +75,7 @@ public class Player extends Unit {
     public int getExperience(){
         return experience;
     }
+    public int getLevel(){return level;}
     @Override
     public void accept(Unit unit) {
         unit.visit(this);

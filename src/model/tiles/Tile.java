@@ -20,6 +20,7 @@ public abstract class Tile {
         Position temp = t.position;
         t.position = this.position;
         this.position = temp;
+
     }
 
     @Override

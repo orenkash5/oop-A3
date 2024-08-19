@@ -13,10 +13,10 @@ import java.util.TreeMap;
 public class Board {
     private Map<Position, Tile> board;
     private Player player;
-    private List<Tile> enemies;
+    private List<Enemy> enemies;
     private final int width;
 
-    public Board(List<Tile> tiles, Player p, List<Tile> enemies, int width){
+    public Board(List<Tile> tiles, Player p, List<Enemy> enemies, int width){
         this.player = p;
         this.enemies = enemies;
         this.width = width;
@@ -25,7 +25,10 @@ public class Board {
             board.put(t.getPosition(), t);
         }
     }
-
+    public void updateTilePosition(Tile tile) {
+        board.remove(tile.getPosition());
+        board.put(tile.getPosition(), tile);
+    }
     public Player getPlayer() {
         return player;
     }

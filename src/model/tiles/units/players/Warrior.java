@@ -6,6 +6,7 @@ import java.util.Random;
 import model.tiles.Tile;
 import model.tiles.units.enemies.Enemy;
 import utils.Position;
+import view.CLI;
 
 public class Warrior extends Player{
 
@@ -24,6 +25,8 @@ public class Warrior extends Player{
         this.health.increaseMax(5*this.level);
         this.attack = this.attack + 2*this.level;
         this.defense = this.defense + this.level;
+        CLI cli = new CLI();
+        cli.displayLevelUp(this);
     }
 
     public void gameTick() {
@@ -33,15 +36,22 @@ public class Warrior extends Player{
     public void specialAbility(List<Enemy> enemies) {
         if (this.remainingCooldown == 0) {
             this.remainingCooldown = this.abilityCooldown;
-            this.health.healAmount(this.health.getCurrent() + 10 * this.defense);
+            List<Enemy> enemiesInRange = new ArrayList<>();
+            for (Enemy enemy : enemies) {
+                if (enemy.getPosition().range(this.getPosition()) < 3) {
+                    enemiesInRange.add(enemy);
+                }
+            }
             Random random = new Random();
-            int randomIndex = random.nextInt(enemies.size());
-            Enemy chosenEnemy = enemies.get(randomIndex);
+            int randomIndex = random.nextInt(enemiesInRange.size());
+            Enemy chosenEnemy = enemiesInRange.get(randomIndex);
+            chosenEnemy.getHealth().takeDamage(this.health.getCurrent() / 10);
+            this.health.healAmount(this.health.getCurrent() + 10 * this.defense);
         }
     }
     public String description(){
         return name + " health " + health.toString() + " attack " + attack + " defence " + defense + " ability cooldown " + abilityCooldown
-                + " remaining cooldown " + remainingCooldown;
+                + " remaining cooldown " + remainingCooldown + " level " + this.level;
     }
 
 }

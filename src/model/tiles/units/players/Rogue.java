@@ -1,6 +1,7 @@
 package model.tiles.units.players;
 
 import model.tiles.units.enemies.Enemy;
+import view.CLI;
 
 import java.util.List;
 
@@ -20,6 +21,8 @@ public class Rogue extends Player {
         this.level++;
         this.currentEnergy = 100;
         this.attack = this.attack + 3*this.level;
+        CLI cli = new CLI();
+        cli.displayLevelUp(this);
     }
 
     public void gameTick() {
@@ -30,11 +33,12 @@ public class Rogue extends Player {
         if (this.currentEnergy - this.cost >= 0) {
             this.currentEnergy = this.currentEnergy - this.cost;
             for (Enemy enemy : enemies) {
-                enemy.takeDamage(this.attack);
+                enemy.getHealth().takeDamage(this.attack);
             }
         }
     }
     public String description(){
-        return name + " health " + health.toString() + " attack " + attack + " defence " + defense + " cost " + cost + " current energy " + currentEnergy;
+        return name + " health " + health.toString() + " attack " + attack + " defence " + defense +
+                " cost " + cost + " current energy " + currentEnergy  + " level " + this.level;
     }
 }
