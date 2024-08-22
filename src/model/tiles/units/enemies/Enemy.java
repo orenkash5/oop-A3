@@ -37,7 +37,9 @@ public class Enemy extends Unit {
         return false;
     }
 
-    public void move(Position playerPosition){
-        //do nothing
+    public void onGameTick(Player player){
+        // do nothing
     }
+
+
 }

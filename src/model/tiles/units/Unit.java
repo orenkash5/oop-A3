@@ -7,8 +7,6 @@ import model.tiles.units.enemies.Enemy;
 import model.tiles.units.players.Player;
 import utils.Health;
 import utils.Position;
-import utils.callbacks.DeathCallback;
-import utils.callbacks.MessageCallback;
 import utils.generators.Generator;
 import utils.generators.RandomGenerator;
 import view.CLI;
@@ -20,8 +18,7 @@ public abstract class Unit extends Tile {
     protected int defense;
 
     protected Generator generator;
-    protected DeathCallback deathCallback;
-    protected MessageCallback messageCallback;
+
 
     public Unit(char tile, String name, int hitPoints, int attack, int defense) {
         super(tile);
@@ -32,11 +29,9 @@ public abstract class Unit extends Tile {
         generator = new RandomGenerator();
     }
 
-    public Unit initialize(Position p, Generator generator, DeathCallback deathCallback, MessageCallback messageCallback){
+    public Unit initialize(Position p, Generator generator){
         super.initialize(p);
         this.generator = generator;
-        this.deathCallback = deathCallback;
-        this.messageCallback = messageCallback;
         return this;
     }
 
@@ -75,9 +70,7 @@ public abstract class Unit extends Tile {
     public abstract void visit(Player p);
     public abstract void visit(Enemy e);
 
-    public void onDeath(){
-        deathCallback.onDeath();
-    }
+
     public String getName(){
         return this.name;
     }

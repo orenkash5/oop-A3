@@ -1,6 +1,7 @@
 package model.game;
 
 import control.initializers.LevelInitializer;
+import control.initializers.TileFactory;
 import model.tiles.Empty;
 import model.tiles.Tile;
 import model.tiles.Wall;
@@ -26,9 +27,11 @@ public class Game {
     private boolean endGame=false;
     private CLI cli;
     private LevelInitializer levelInitializer;
+    private TileFactory tileFactory;
 
 
     public void runGame() throws IOException {
+        tileFactory = new TileFactory();
         cli = new CLI();
         answer=new File(levelsPath.getCanonicalPath());
         levels = answer.listFiles();
@@ -37,7 +40,7 @@ public class Game {
                 cli.display("Select Player: ");
                 Player[] playerTypes= {new JonSnow(), new TheHound(), new Melisandre(), new ThorosOfMyr(), new AryaStark(), new Bronn()};
                 for(int i=0;i<playerTypes.length;i++)
-                    this.cli.display((i+1)+"."+" "+playerTypes[i].description());
+                    cli.display((i+1)+"."+" "+playerTypes[i].description());
                 Scanner scanner = new Scanner(System.in);
                 int i = -1;
                 while(i<0 || i>7){
@@ -53,32 +56,44 @@ public class Game {
             List<Tile> tiles = new ArrayList<>();
             levelInitializer.initLevel("", levels[k], tiles, enemies, p);
             board=new Board(tiles, p, enemies, width);
- //           System.out.println("Level: "+(k+1));
             while(!enemies.isEmpty()&&!endGame){
                 cli.displayStats(board);
                 cli.displayBoard(board);
                 char c = '_';
                 Scanner scanner = new Scanner(System.in);
-                while (c != 'w' && c != 'e' && c != 'a' && c != 's' && c != 'd') {
+                while (c != 'w' && c != 'e' && c != 'a' && c != 's' && c != 'd' && c != 'q') {
                     c = scanner.next().charAt(0);
                 }
+                Iterator<Enemy> iterator1 = enemies.iterator();
+                while (iterator1.hasNext()){
+                    Enemy e = iterator1.next();
+                    if (e.getHealth().getCurrent()==0){
+                        Position pos = e.getPosition();
+                        iterator1.remove();
+                        tiles.remove(e);
+                        Tile empty = tileFactory.produceEmpty(pos);
+                        tiles.add(empty);
+                        board.updateTilePosition(empty);
+                    }
+                }
+
                 playerMove(c, enemies);
                 for (Enemy e: enemies){
-                    if (e.getHealth().getCurrent() == 0)
-                        enemies.remove(e);
-                    else{
-                        if(isMonster(e)) {
-                            RandomGenerator g = new RandomGenerator();
-                            int i = g.generate(4);
-                            enemyMove(i % 4, e);
-                        }
-                    }
+                    if(isMonster(e)) {
+                        RandomGenerator g = new RandomGenerator();
+                        int i = g.generate(4);
+                        enemyMove(i % 4, e);
+                    }else
+                        e.onGameTick(p);
+
                 }
 
                 if (p.getHealth().getCurrent() <= 0){
                     p.onDeath();
                     endGame = true;
+                    cli.displayBoard(board);
                 }
+                p.onGameTick();
 
             }
             if (!endGame)
@@ -93,16 +108,7 @@ public class Game {
 
     }
 
-    private boolean isEnemyCharacter(char character) {
-        return character == 's' || character == 'k' || character == 'M' || character == 'q' || character == 'z' || character == 'b'
-                || character == 'g' || character == 'w' || character == 'C' || character == 'K' || character == 'B'
-                || character == 'Q' || character == 'D';
-    }
-    private boolean isTile(char character){
-        return character == 's' || character == 'k' || character == 'M' || character == 'q' || character == 'z' || character == 'b'
-                || character == 'g' || character == 'w' || character == 'C' || character == 'K' || character == 'B'
-                || character == 'Q' || character == 'D' || character=='.' || character == '#' || character== '@';
-    }
+
     private  boolean isMonster(Enemy e){
         return e.getTile() == 's' || e.getTile() == 'k' || e.getTile() == 'M' || e.getTile() == 'q' || e.getTile() == 'z'
                 || e.getTile() == 'b' || e.getTile() == 'g' || e.getTile() == 'w' || e.getTile() == 'C' || e.getTile() == 'K';

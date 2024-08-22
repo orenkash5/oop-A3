@@ -6,6 +6,7 @@ public class Trap extends Enemy{
     protected int invisibilityTime;
     protected int ticksCount;
     protected boolean isVisible;
+    protected char visibleTile;
 
     public Trap(char tile, String name, int hitPoints, int attack, int defense, int experienceValue, int visibilityTime, int invisibilityTime){
         super(tile, name, hitPoints, attack, defense, experienceValue);
@@ -13,9 +14,10 @@ public class Trap extends Enemy{
         this.invisibilityTime = invisibilityTime;
         this.ticksCount = 0;
         this.isVisible = true;
+        this.visibleTile = tile;
     }
 
-    public void onEnemyTurn(Player player){
+    public void onGameTick(Player player){
         this.isVisible = this.ticksCount < this.visibilityTime;
         if(this.ticksCount == this.visibilityTime + this.invisibilityTime){
             this.ticksCount = 0;
@@ -25,6 +27,10 @@ public class Trap extends Enemy{
         if (isVisible && this.position.range(player.getPosition())<2 ){
             this.visit(player);
         }
+        if (isVisible)
+            this.tile = visibleTile;
+        else
+            this.tile = '.';
     }
 
 }

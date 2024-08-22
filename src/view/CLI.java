@@ -20,9 +20,9 @@ public class CLI  extends View {
     }
 
     public void displayCombatInfo(Unit combatant1, Unit combatant2, int attack, int defence, int damageTaken) {
-        System.out.println(combatant1.description());
+        System.out.println("attacker: " + combatant1.description());
         System.out.println("attack " + attack + " defence " + defence + " damage taken " + damageTaken);
-        System.out.println(combatant2.description());
+        System.out.println("defender: " + combatant2.description());
     }
 
     public void displayLevelUp(Player player){

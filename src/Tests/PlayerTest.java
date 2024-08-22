@@ -19,5 +19,10 @@ public class PlayerTest {
         jonSnow.interact(empty);
         assertEquals(jonSnow.getPosition(), position);
     }
+    public void PlayerTest2(){
+        JonSnow jonSnow = new JonSnow();
+        jonSnow.initialize(new Position(0,0));
+        jonSnow.addExperience(50);
+    }
 
 }

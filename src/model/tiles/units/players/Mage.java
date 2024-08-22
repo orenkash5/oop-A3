@@ -32,14 +32,16 @@ public class Mage extends Player{
         this.manaPool = manaPool + 25*this.level;
         this.currentMana = Math.min(this.currentMana + this.manaPool/4, this.manaPool);
         this.spellPower = this.spellPower + 10*this.level;
+        this.health.heal();
         CLI cli = new CLI();
         cli.displayLevelUp(this);
     }
 
-    public void gameTick() {
+    public void onGameTick() {
         this.currentMana=Math.min(this.manaPool, this.currentMana + this.level);
     }
     public void specialAbility(List<Enemy> enemies) {
+        CLI cli = new CLI();
         if (this.currentMana - this.manaCost >= 0) {
             this.currentMana = this.currentMana - this.manaCost;
             int hits = 0;
@@ -49,14 +51,18 @@ public class Mage extends Player{
                     enemiesInRange.add(enemy);
                 }
             }
-            while (hits < hitCount) {
-                Random random = new Random();
-                int randomIndex = random.nextInt(enemiesInRange.size());
-                Enemy chosenEnemy = enemiesInRange.get(randomIndex);
-                chosenEnemy.getHealth().takeDamage(this.spellPower);
-                hits++;
+            if (!enemiesInRange.isEmpty()){
+                while (hits < hitCount) {
+                    Random random = new Random();
+                    int randomIndex = random.nextInt(enemiesInRange.size());
+                    Enemy chosenEnemy = enemiesInRange.get(randomIndex);
+                    chosenEnemy.getHealth().takeDamage(this.spellPower);
+                    hits++;
+                }
             }
-        }
+            cli.display("used special ability");
+        } else
+            cli.display("not enough mana");
     }
     public String description(){
         return name + " health " + health.toString() + " attack " + attack + " defence " + defense + " mana pool " + manaPool

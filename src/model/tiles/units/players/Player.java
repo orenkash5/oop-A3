@@ -45,6 +45,7 @@ public class Player extends Unit {
         defense += defenseGain;
         CLI cli = new CLI();
         cli.displayLevelUp(this);
+        this.health.heal();
     }
 
     protected int levelRequirement(){
@@ -89,18 +90,21 @@ public class Player extends Unit {
         battle(e);
         if(!e.alive()){
             addExperience(e.experienceValue());
-            e.onDeath();
+
         }
     }
 
-    @Override
+
     public void onDeath() {
-        this.deathCallback.onDeath();
         this.tile = 'X';
-        //TODO: Implement onDeath
+
     }
     public void specialAbility(List<Enemy> enemies){
         //do nothing
+    }
+
+    public void onGameTick(){
+        // do nothing
     }
 
 
